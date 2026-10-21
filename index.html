@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1in8b Class Code Finder — born where you want</title>
+<meta name="description" content="1in8b.life classroom class codes are deterministic per date. Scan all 10,000 codes for any day and pick the one that births you in the country you want. Fan-made research tool.">
+<style>
+  :root {
+    --bg: #0f1220; --card: #171a2b; --card2: #1d2135; --line: #2a2f4a;
+    --tx: #e8eaf6; --mut: #9aa1c0; --acc: #7c9cff; --pink: #ff8fb8;
+    --ok: #4ade80; --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; padding: 20px 16px 60px; max-width: 860px;
+    background: var(--bg); color: var(--tx);
+    font: 15px/1.5 -apple-system, "Segoe UI", Roboto, "PingFang HK", "Noto Sans", sans-serif;
+  }
+  a { color: var(--acc); }
+  h1 { font-size: 26px; margin: 8px 0 4px; }
+  h1 .thin { color: var(--acc); font-weight: 600; }
+  .sub { color: var(--mut); margin: 4px 0 8px; }
+  .warn { color: var(--warn); font-size: 12.5px; margin: 2px 0 14px; }
+
+  .pocket {
+    position: sticky; top: 8px; z-index: 5;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    background: var(--card2); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; margin-bottom: 14px;
+  }
+  .pocket label { display: flex; gap: 6px; align-items: center; font-size: 13px; color: var(--mut); }
+  input, select {
+    background: var(--bg); color: var(--tx); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 14px;
+  }
+  input[type="search"] { width: 200px; }
+  .color-scheme-dark, input, select { color-scheme: dark; }
+  .sanity { margin-left: auto; font-size: 12.5px; padding: 5px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); }
+  .sanity.ok { color: var(--ok); }
+  .sanity.bad { color: var(--warn); }
+
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; }
+  .row.none { opacity: .45; }
+  .rowhead { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .name { font-weight: 650; font-size: 16px; }
+  .id { color: var(--mut); font-size: 12px; font-family: ui-monospace, Menlo, monospace; }
+  .tag { font-size: 11px; color: var(--acc); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+  .meta { margin-left: auto; color: var(--mut); font-size: 12.5px; }
+  .profile { color: var(--mut); font-size: 12.5px; margin-top: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    font: 600 13px ui-monospace, Menlo, monospace; cursor: pointer;
+    background: var(--bg); border: 1px solid var(--line); color: var(--tx);
+    border-radius: 8px; padding: 5px 9px;
+  }
+  .chip em { font-style: normal; margin-left: 5px; font-size: 11px; }
+  .chip.m em { color: var(--acc); } .chip.f em { color: var(--pink); }
+  .chip:hover { border-color: var(--acc); }
+  .more { background: none; border: none; color: var(--acc); cursor: pointer; font: inherit; font-size: 12.5px; padding: 5px 4px; }
+
+  .how { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-top: 18px; }
+  .how summary { cursor: pointer; font-weight: 650; }
+  .how h3 { font-size: 15px; margin: 14px 0 4px; }
+  .how p, .how li { color: var(--mut); font-size: 14px; }
+  .how code { background: var(--bg); border-radius: 5px; padding: 1px 5px; font-size: 13px; }
+  pre {
+    background: #0a0d18; border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px; overflow-x: auto; font-size: 12.5px; line-height: 1.45;
+  }
+  footer { margin-top: 22px; color: var(--mut); font-size: 12.5px; }
+  #toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    background: var(--card2); border: 1px solid var(--acc); color: var(--tx);
+    padding: 8px 16px; border-radius: 999px; font-size: 13.5px; opacity: 0;
+    pointer-events: none; transition: opacity .25s;
+  }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<h1>🎲 1in8b <span class="thin">Class Code Finder</span></h1>
+<p class="sub">In <a href="https://1in8b.life" rel="noopener">1in8b.life</a>'s classroom mode, a class code pins the entire birth:
+<strong>same day + same code = the same baby</strong> — same country, same sex, same everything.
+This scans all 10,000 codes for any date, so you can pick the one that births you where you want.</p>
+<p class="warn">Fan-made research tool · not affiliated with the game · codes flip at midnight in <em>your</em> browser's timezone</p>
+
+<div class="pocket">
+  <label>Date <input type="date" id="date"></label>
+  <label>Search <input type="search" id="q" placeholder="Hong Kong, KOR, Japan…"></label>
+  <label>Sort
+    <select id="sort">
+      <option value="codes">Most codes</option>
+      <option value="name">A–Z</option>
+    </select>
+  </label>
+  <div id="sanity" class="sanity">…</div>
+</div>
+
+<noscript><p>This tool needs JavaScript (it runs a tiny PRNG locally — no network calls).</p></noscript>
+<main id="list"></main>
+
+<details class="how">
+  <summary>How the trick works (and how to use a code)</summary>
+
+  <h3>The trick</h3>
+  <p>The whole birth lottery is client-side. When you start a classroom life, the game seeds its RNG with:</p>
+  <pre>setRng(seedRng('1in8b-class:' + CODE + ':' + YYYY + '-' + M + '-' + D))</pre>
+  <p>The seed string is just the code and <strong>your browser's local date</strong> (month/day <em>not</em> zero-padded, e.g. <code>2026-7-4</code>).
+  <code>seedRng</code> hashes that string (FNV-style → <strong>mulberry32</strong>, a tiny seeded PRNG) — so the "random" birth is fully computable in advance:</p>
+  <ul>
+    <li><strong>draw 1</strong> — country, weighted by annual births (India ≈ 17.6%, Hong Kong ≈ 0.03%)</li>
+    <li><strong>draw 2</strong> — sex (<code>chance(srb)</code>: China .528 / India .519 / elsewhere .512 → male)</li>
+  </ul>
+  <p>Same day + same code ⇒ same draws ⇒ the same baby. So you enumerate all 10,000 codes offline and pick.</p>
+
+  <h3>Use a code</h3>
+  <ol>
+    <li>Open <a href="https://1in8b.life/en/?edu=1" rel="noopener">1in8b.life/en/?edu=1</a> (classroom mode).</li>
+    <li>Choose the class-code option and enter a code from this page for <em>today's date</em>.</li>
+    <li>Check the birth certificate — country and sex should match the chip you picked.</li>
+  </ol>
+  <p>Limitations: one code works for one calendar day only (your local midnight flips it), and that life must run to the end before you can class-code again. Small countries get ~0–4 codes a day — some days have none. This page predicts country + sex; name, family and city are also fixed by the code but need deeper draws to compute.</p>
+
+  <h3>Verify it yourself — paste this in the game's DevTools console</h3>
+  <p>It calls the site's own <code>seedRng</code> and <code>COUNTRIES</code>, so there is zero port-drift risk. The site's CSP does not block DevTools console evaluation.</p>
+  <pre>(() => {
+  const DATE = '2026-10-21';           // local date, YYYY-M-D
+  const WANT = 'HKG';                  // any ISO3 id
+  const srb = id => id === 'CHN' ? 0.528 : id === 'IND' ? 0.519 : 0.512;
+  const total = COUNTRIES.reduce((s, c) => s + Math.max(0, c.b), 0);
+  const hits = []; let ind = 0;
+  for (let i = 0; i &lt; 10000; i++) {
+    const code = String(i).padStart(4, '0');
+    const rng = seedRng('1in8b-class:' + code + ':' + DATE);
+    const r = rng();                                   // draw 1: country
+    let x = r * total, pick = null;
+    for (const c of COUNTRIES) { x -= Math.max(0, c.b); if (x &lt;= 0) { pick = c; break; } }
+    if (pick.id === 'IND') ind++;
+    if (pick.id === WANT) hits.push(code + '(' + (rng() &lt; srb(pick.id) ? 'M' : 'F') + ')');  // draw 2: sex
+  }
+  console.log('sanity IND', (ind / 100).toFixed(1) + '% (want 17–19)');
+  console.log(WANT, DATE, hits.length ? hits.join(' ') : 'none today');
+})();</pre>
+
+  <h3>Trust but verify</h3>
+  <p>The self-check badge above reruns a full scan and compares the India share (should sit around 17–19% every day)
+  and the RNG mean (~0.5). If the game updates its seeding logic, the badge goes yellow — trust nothing until re-verified.
+  Anchors used during development: <code>2026-10-18 → 6101</code>, <code>2026-10-21 → 3039 (F)</code> for Hong Kong, both confirmed by actually playing the codes on the live site.</p>
+</details>
+
+<footer>
+  Fan project for research/education. Not affiliated with 1in8b.life — go play the original, it's a lovely little game.
+  Country statistics are UN-derived data extracted from the public game bundle for interoperability; tool code is MIT licensed.
+  Everything runs locally in your browser — zero network calls.
+</footer>
+
+<div id="toast"></div>
+
+<script src="data/countries.min.js"></script>
+<script src="tools/1in8b.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var listEl = $('#list'), sanityEl = $('#sanity'), toastEl = $('#toast');
+  var scan = null, expanded = {}, toastTimer = null;
+
+  function todayParts() { var t = new Date(); return [t.getFullYear(), t.getMonth() + 1, t.getDate()]; }
+
+  function fmt(n) { return n.toLocaleString('en-US'); }
+  function fmtPop(k) {
+    var v = k * 1000;
+    if (v >= 1e9) return (v / 1e9).toFixed(2) + 'B';
+    if (v >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+    return fmt(v);
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+
+  function copyCode(code) {
+    var done = function () { toast('Copied code ' + code + ' — use it in ?edu=1 classroom mode'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done, function () { fallback(); });
+    } else fallback();
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = code; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { toast('Code: ' + code); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  function chipHtml(hit) {
+    return '<button class="chip ' + (hit.g === 'M' ? 'm' : 'f') + '" data-code="' + hit.code + '">' +
+           hit.code + '<em>' + hit.g + '</em></button>';
+  }
+
+  function render() {
+    var q = $('#q').value.trim().toLowerCase();
+    var sort = $('#sort').value;
+    var rows = COUNTRIES_DATA.map(function (c) {
+      return { c: c, hits: scan.byCountry[c.id] || [] };
+    });
+    if (q) rows = rows.filter(function (r) {
+      return r.c.name.toLowerCase().indexOf(q) !== -1 || r.c.id.toLowerCase().indexOf(q) !== -1;
+    });
+    rows.sort(sort === 'name'
+      ? function (a, b) { return a.c.name.localeCompare(b.c.name); }
+      : function (a, b) { return b.c.b - a.c.b || a.c.name.localeCompare(b.c.name); });
+
+    var html = rows.map(function (r) {
+      var hits = r.hits;
+      var none = hits.length === 0;
+      var shown = expanded[r.c.id] ? hits : hits.slice(0, 12);
+      var chips = shown.map(chipHtml).join('');
+      if (!expanded[r.c.id] && hits.length > 12) {
+        chips += '<button class="more" data-more="' + r.c.id + '">+' + (hits.length - 12) + ' more</button>';
+      }
+      return '<div class="row' + (none ? ' none' : '') + '">' +
+        '<div class="rowhead">' +
+          '<span class="name">' + esc(r.c.name) + '</span>' +
+          '<span class="id">' + esc(r.c.id) + '</span>' +
+          '<span class="tag">' + esc(OneIn8B.REGIONS[r.c.p] || r.c.p) + '</span>' +
+          '<span class="meta">' + (none ? 'no code today' : hits.length + ' code' + (hits.length > 1 ? 's' : '') + ' · 1 in ' + fmt(Math.round(scan.total / r.c.b)) + ' births') + '</span>' +
+        '</div>' +
+        '<div class="profile">births/yr ' + fmt(r.c.b) + ' · pop ' + fmtPop(r.c.pop) + ' · life exp ' + r.c.le +
+          ' · GDP $' + fmt(r.c.ppp) + ' · urban ' + r.c.urb + '% · fertility ' + r.c.tfr + '</div>' +
+        (none ? '' : '<div class="chips">' + chips + '</div>') +
+      '</div>';
+    }).join('');
+    listEl.innerHTML = html || '<div class="row none"><div class="rowhead"><span class="name">No country matches "' + esc(q) + '"</span></div></div>';
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var more = e.target.closest('[data-more]');
+    if (more) { expanded[more.getAttribute('data-more')] = true; render(); return; }
+    var chip = e.target.closest('.chip');
+    if (chip) copyCode(chip.getAttribute('data-code'));
+  });
+  $('#q').addEventListener('input', render);
+  $('#sort').addEventListener('change', render);
+  $('#date').addEventListener('change', rescan);
+
+  function rescan() {
+    var parts = $('#date').value.split('-').map(Number);
+    scan = OneIn8B.scanDate(COUNTRIES_DATA, parts[0], parts[1], parts[2]);
+    var ok = scan.indPct > 17 && scan.indPct < 19 && Math.abs(scan.mean - 0.5) < 0.01;
+    sanityEl.textContent = (ok ? 'self-check ✓ ' : 'self-check ⚠ ') +
+      'IND ' + scan.indPct.toFixed(1) + '% · mean ' + scan.mean.toFixed(3) +
+      (ok ? '' : ' — game logic may have changed');
+    sanityEl.className = 'sanity ' + (ok ? 'ok' : 'bad');
+    expanded = {};
+    render();
+  }
+
+  // init: today by default; ?d=YYYY-MM-DD & ?c=ISO3 to deep-link
+  var t = todayParts();
+  $('#date').value = t[0] + '-' + String(t[1]).padStart(2, '0') + '-' + String(t[2]).padStart(2, '0');
+  var usp = new URLSearchParams(location.search);
+  if (usp.get('d') && /^\d{4}-\d{2}-\d{2}$/.test(usp.get('d'))) $('#date').value = usp.get('d');
+  if (usp.get('c')) $('#q').value = usp.get('c');
+  rescan();
+})();
+</script>
+</body>
+</html>
