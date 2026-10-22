@@ -37,6 +37,12 @@
   input[type="search"] { width: 200px; }
   .color-scheme-dark, input, select { color-scheme: dark; }
   .sanity { margin-left: auto; font-size: 12.5px; padding: 5px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); }
+  .edu-link {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; white-space: nowrap;
+    padding: 5px 10px; border-radius: 999px; background: var(--bg);
+    border: 1px solid var(--acc); color: var(--acc);
+  }
+  .edu-link:hover { background: var(--acc); color: var(--bg); }
   .sanity.ok { color: var(--ok); }
   .sanity.bad { color: var(--warn); }
 
@@ -96,6 +102,7 @@ This scans all 10,000 codes for any date, so you can pick the one that births yo
     </select>
   </label>
   <div id="sanity" class="sanity">…</div>
+  <a class="edu-link" href="https://1in8b.life/en/?edu=1" target="_blank" rel="noopener">Open classroom mode ↗</a>
 </div>
 
 <noscript><p>This tool needs JavaScript (it runs a tiny PRNG locally — no network calls).</p></noscript>
@@ -115,12 +122,19 @@ This scans all 10,000 codes for any date, so you can pick the one that births yo
   </ul>
   <p>Same day + same code ⇒ same draws ⇒ the same baby. So you enumerate all 10,000 codes offline and pick.</p>
 
-  <h3>Use a code</h3>
+  <h3>Use a code — step by step</h3>
   <ol>
-    <li>Open <a href="https://1in8b.life/en/?edu=1" rel="noopener">1in8b.life/en/?edu=1</a> (classroom mode).</li>
-    <li>Choose the class-code option and enter a code from this page for <em>today's date</em>.</li>
+    <li><strong>Open classroom mode</strong>: <a href="https://1in8b.life/en/?edu=1" rel="noopener">1in8b.life/en/?edu=1</a>
+      — or from the game footer, "Open in classroom mode". Heavier themes are held back and posting/payments are off.</li>
+    <li>On the first screen, find the <strong>Class code (optional)</strong> box (placeholder "e.g. 4271"). Leave it empty for now.</li>
+    <li>Back on this page, make sure the date picker shows <em>today</em> (codes flip at your local midnight),
+      find the country row, and <strong>click a code chip</strong> to copy the four digits —
+      the small <code>M</code>/<code>F</code> on the chip is the sex you'll be born.</li>
+    <li>In the game, type the four digits into the <strong>Class code</strong> box and press <strong>Be born</strong>.</li>
     <li>Check the birth certificate — country and sex should match the chip you picked.</li>
   </ol>
+  <p>To leave classroom mode, open <a href="https://1in8b.life/en/?edu=0" rel="noopener">1in8b.life/en/?edu=0</a>
+  (classroom mode is saved per browser).</p>
   <p>Limitations: one code works for one calendar day only (your local midnight flips it), and that life must run to the end before you can class-code again. Small countries get ~0–4 codes a day — some days have none. This page predicts country + sex; name, family and city are also fixed by the code but need deeper draws to compute.</p>
 
   <h3>Verify it yourself — paste this in the game's DevTools console</h3>
@@ -186,7 +200,7 @@ This scans all 10,000 codes for any date, so you can pick the one that births yo
   }
 
   function copyCode(code) {
-    var done = function () { toast('Copied code ' + code + ' — use it in ?edu=1 classroom mode'); };
+    var done = function () { toast('Copied ' + code + ' — paste into "Class code" in classroom mode'); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).then(done, function () { fallback(); });
     } else fallback();

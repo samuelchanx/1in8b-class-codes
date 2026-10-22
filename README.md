@@ -40,11 +40,21 @@ posts, memorials, rooms and a stats beacon. So the entire scan is computable off
 | `console-scan.js` | One-off check using the **site's own** RNG functions (zero port-drift risk). Paste into DevTools on 1in8b.life — CSP does not block console input |
 | `python3 tools/scan.py [YYYY-MM-DD] [ISO3]` | Offline CLI / scripting |
 
-## Using a code
+## Using a code — step by step
 
-1. Open `https://1in8b.life/en/?edu=1` (classroom mode).
-2. Choose the class-code option, enter a code listed for **today's** date.
-3. The birth certificate should match the chip you picked (country + sex).
+1. **Open classroom mode: [1in8b.life/en/?edu=1](https://1in8b.life/en/?edu=1)**
+   — the same page is reachable from the game footer's "Open in classroom mode" link.
+   In this mode heavier themes are held back and posting/payments are off.
+2. On the first screen, find the **Class code (optional)** box (placeholder "e.g. 4271").
+   Leave it empty for now.
+3. Open the [finder tool](https://samuelchanx.github.io/1in8b-class-codes/) — it already
+   shows **today's** codes. Find your country's row and **click a code chip** to copy the
+   four digits. The small `M`/`F` on the chip is the sex you'll be born.
+4. Back in the game, type the four digits into the **Class code** box and press **Be born**.
+5. Check the birth certificate — country and sex should match the chip you picked.
+
+To leave classroom mode, open [1in8b.life/en/?edu=0](https://1in8b.life/en/?edu=0)
+(classroom mode is saved per browser).
 
 Limitations:
 
